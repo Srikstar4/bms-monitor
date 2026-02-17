@@ -1,15 +1,23 @@
-name: Discord Test
+name: Monitor Tickets
 
 on:
+  schedule:
+    - cron: "*/1 * * * *"   # runs every 1 minute
   workflow_dispatch:
 
 jobs:
-  send-message:
+  monitor:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send Discord Message
+      - name: Check BookMyShow Page
         run: |
-          curl -H "Content-Type: application/json" \
-          -d "{\"content\":\"🚀 GitHub Action is working!\"}" \
-          ${{ secrets.DISCORD_WEBHOOK }}
+          response=$(curl -s https://in.bookmyshow.com/sports/super-8-match-8-icc-men-s-t20-wc-2026/ET00474264)
+
+          if echo "$response" | grep -q "Book Now"; then
+            curl -H "Content-Type: application/json" \
+            -d "{\"content\":\"🚨 BOOK NOW IS LIVE! CHECK IMMEDIATELY 🚨\"}" \
+            ${{ secrets.DISCORD_WEBHOOK }}
+          else
+            echo "Still Coming Soon..."
+          fi
