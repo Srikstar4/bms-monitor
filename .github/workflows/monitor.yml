@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check BookMyShow Page
         run: |
-          response=$(curl -s https://YOUR_EVENT_LINK_HERE)
+          response=$(curl -s https://in.bookmyshow.com/sports/super-8-match-8-icc-men-s-t20-wc-2026/ET00474264)
 
           if echo "$response" | grep -q "Book Now"; then
             curl -H "Content-Type: application/json" \
